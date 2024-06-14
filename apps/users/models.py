@@ -1,8 +1,10 @@
 import uuid
+
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
 from .managers import CustomUserManager
 
 
@@ -28,7 +30,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
-    
+
     @property
     def get_full_name(self):
         return f"{self.first_name.title()} {self.last_name.title()}"

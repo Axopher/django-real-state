@@ -13,6 +13,7 @@ class AgentListAPIView(generics.ListAPIView):
     queryset = Profile.objects.filter(is_agent=True)
     serializer_class = ProfileSerializer
 
+
 """
     ## Function based view implementation of it
     from rest_framework import api_view, permissions
@@ -25,6 +26,7 @@ class AgentListAPIView(generics.ListAPIView):
         name_spaced_response = {"agents": serializer.data}
         return Response(name_speed_response, status=status.HTTP_200_OK)
 """
+
 
 class TopAgentListAPIView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -62,7 +64,7 @@ class UpdateProfileAPIView(APIView):
         serializer = UpdateProfileSerializer(
             instance=request.user.profile, data=data, partial=True
         )
-        
+
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
