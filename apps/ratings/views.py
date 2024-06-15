@@ -10,17 +10,25 @@ from .models import Rating
 User = get_user_model()
 
 
+class ForbiddenResponse(Response):
+    def __init__(self, message="Real Estate Error", *args, **kwargs):
+        super().__init__({"message": message}, status=status.HTTP_403_FORBIDDEN, *args, **kwargs)
+
+
 # create agent review
 @api_view(["POST"])
 @permission_classes([permissions.IsAuthenticated])
 def create_agent_review(request, profile_id):
-    agent_profile = Profile.objects.get(id=profile_id, is_agent=True)
+    try:
+        agent_profile = Profile.objects.get(id=profile_id, is_agent=True)
+    except Profile.DoesNotExist:
+        return ForbiddenResponse(message="Profile Does Not Exist!!!")
+
     data = request.data
 
     profile_user = User.objects.get(pkid=agent_profile.user.pkid)
     if profile_user.email == request.user.email:
-        formatted_response = {"message": "You can't rate yourself"}
-        return Response(formatted_response, status=status.HTTP_403_FORBIDDEN)
+        return ForbiddenResponse(message="You can't rate yourself")
 
     alreadyExists = agent_profile.agent_review.filter(
         agent__pkid=profile_user.pkid
