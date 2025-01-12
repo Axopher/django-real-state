@@ -16,6 +16,6 @@ until worker_ready; do
 done
 >&2 echo "Celery workers are available and ready!...:-)"
 
-flower \
-    --app=real_estate \
+celery \
+    -A real_estate flower \
     --brokers="${CELERY_BROKER}"
